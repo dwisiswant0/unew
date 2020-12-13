@@ -17,7 +17,7 @@ var (
 	outfile                  *os.File
 	sc                       *bufio.Scanner
 	skipPath                 skipPaths
-	replace, outtext, fr, fs string
+	replace, outText, fr, fs string
 )
 
 func (s *skipPaths) String() string {
@@ -86,10 +86,10 @@ func main() {
 		}
 
 		if !combine {
-			outtext = fmt.Sprintf("%s%s\n", b, qMark(u.RawQuery))
-			fmt.Printf("%s", outtext)
+			outText = fmt.Sprintf("%s%s\n", b, qMark(u.RawQuery))
+			fmt.Printf("%s", outText)
 			if fs != "" {
-				fmt.Fprintf(outfile, "%s", outtext)
+				fmt.Fprintf(outfile, "%s", outText)
 			}
 
 			continue
@@ -103,10 +103,10 @@ func main() {
 	}
 
 	for k, v := range urls {
-		outtext = fmt.Sprintf("%s%s\n", k, qMark(v))
-		fmt.Printf("%s", outtext)
+		outText = fmt.Sprintf("%s%s\n", k, qMark(v))
+		fmt.Printf("%s", outText)
 		if fs != "" {
-			fmt.Fprintf(outfile, "%s", outtext)
+			fmt.Fprintf(outfile, "%s", outText)
 		}
 	}
 }
