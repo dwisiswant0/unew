@@ -6,17 +6,33 @@ import (
 	"fmt"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 )
 
-var combine bool
-var outfile *os.File
-var sc *bufio.Scanner
-var replace, outtext, fr, fs string
+type skipPaths []string
+
+var (
+	combine                  bool
+	outfile                  *os.File
+	sc                       *bufio.Scanner
+	skipPath                 skipPaths
+	replace, outtext, fr, fs string
+)
+
+func (s *skipPaths) String() string {
+	return ""
+}
+
+func (s *skipPaths) Set(value string) error {
+	*s = append(*s, value)
+	return nil
+}
 
 func init() {
 	flag.StringVar(&replace, "r", "", "Replace parameters value")
 	flag.BoolVar(&combine, "combine", false, "Combine parameters")
+	flag.Var(&skipPath, "skip-path", "Skip specific paths (regExp pattern)")
 	flag.Parse()
 
 	fr := flag.Arg(0)
@@ -45,6 +61,10 @@ func main() {
 	for sc.Scan() {
 		u, err := url.ParseRequestURI(sc.Text())
 		if err != nil {
+			continue
+		}
+
+		if matchPath(skipPath, u) {
 			continue
 		}
 
@@ -133,4 +153,19 @@ func qsReplace(q url.Values, r string) string {
 	}
 
 	return qs.Encode()
+}
+
+func matchPath(s []string, u *url.URL) bool {
+	for _, p := range s {
+		m, e := regexp.MatchString(p, u.Path)
+		if e != nil {
+			continue
+		}
+
+		if m {
+			return true
+		}
+	}
+
+	return false
 }
