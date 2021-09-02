@@ -29,7 +29,7 @@ Usage of `unew`:
 with [Go](https://golang.org/doc/install):
 
 ```bash
-▶ go get -u github.com/dwisiswant0/unew
+▶ go install github.com/dwisiswant0/unew@latest
 ```
 
 ## Workaround
